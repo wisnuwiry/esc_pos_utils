@@ -1,12 +1,13 @@
-import 'package:image/image.dart';
 import 'dart:typed_data';
-import 'package:flutter/services.dart';
+
 import 'package:esc_pos_utils/esc_pos_utils.dart';
+import 'package:flutter/services.dart';
+import 'package:image/image.dart';
 
 Future<void> main() async {
   final profile = await CapabilityProfile.load();
   final generator = Generator(PaperSize.mm80, profile);
-  List<int> bytes = [];
+  var bytes = [];
 
   bytes += generator.text(
       'Regular: aA bB cC dD eE fF gG hH iI jJ kK lL mM nN oO pP qQ rR sS tT uU vV wW xX yY zZ');
@@ -53,7 +54,7 @@ Future<void> main() async {
   // Print image:
   final ByteData data = await rootBundle.load('assets/logo.png');
   final Uint8List imgBytes = data.buffer.asUint8List();
-  final Image image = decodeImage(imgBytes);
+  final Image image = decodeImage(imgBytes)!;
   bytes += generator.image(image);
   // Print image using an alternative (obsolette) command
   // bytes += generator.imageRaster(image);
@@ -71,4 +72,6 @@ Future<void> main() async {
 
   bytes += generator.feed(2);
   bytes += generator.cut();
+
+  print(bytes);
 }
